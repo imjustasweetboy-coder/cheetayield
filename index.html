@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
   <!-- FAVICON "EE" ESCALONADO (Blanco / Verde Neón) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><g transform='skewX(-14)' font-family='Arial Black, sans-serif' font-weight='900' font-size='62'><text x='24' y='64' fill='%23ffffff'>E</text><text x='58' y='76' fill='%2322c55e'>E</text></g></svg>">
@@ -21,7 +21,11 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
     
-    /* OVERFLOW-X HIDDEN EVITA CUALQUIER DESPLAZAMIENTO HORIZONTAL EN MÓVIL */
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
     body { 
       background-color: var(--bg-color); 
       color: var(--text); 
@@ -30,7 +34,6 @@
       align-items: center; 
       min-height: 100vh; 
       padding: 16px; 
-      overflow-x: hidden;
     }
     
     .container { 
@@ -84,7 +87,7 @@
       fill: currentColor;
     }
 
-    /* RESPONSIVE AUTO-STACKING: BOTÓN A LA IZQUIERDA */
+    /* RESPONSIVE AUTO-STACKING */
     @media (max-width: 420px) {
       .container {
         padding: 18px 16px;
@@ -145,7 +148,7 @@
 
     .form-group { margin-bottom: 16px; }
 
-    /* ESTRUCTURA TOOLTIP */
+    /* ESTRUCTURA TOOLTIP CORREGIDA */
     .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     
@@ -167,11 +170,11 @@
     }
     .tooltip-icon:hover { background-color: var(--accent); color: #000; }
     
-    /* TOOLTIP BASE CON ANCHO AJUSTADO Y SEGURO */
+    /* TOOLTIP POR DEFECTO: ANCLADO A LA DERECHA */
     .tooltip-text {
       visibility: hidden;
-      width: max-content;
-      max-width: clamp(200px, 65vw, 240px);
+      width: 240px;
+      max-width: calc(100vw - 64px);
       background-color: #0f172a;
       color: var(--text);
       font-size: 0.75rem;
@@ -182,9 +185,8 @@
       position: absolute;
       z-index: 50;
       bottom: 125%;
-      left: 0;
-      right: auto;
-      transform: none;
+      right: 0;
+      left: auto;
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
       box-shadow: 0 4px 16px rgba(0,0,0,0.6);
@@ -195,11 +197,10 @@
     .tooltip-text li { margin-bottom: 3px; }
     .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-    /* EL PRIMER TOOLTIP Y EL DE LA COLUMNA DERECHA ABREN HACIA LA IZQUIERDA */
-    .form-group:first-of-type .tooltip-text,
-    .input-grid > div:last-child .tooltip-text {
-      left: auto;
-      right: 0;
+    /* SOLO KM/GAL (COLUMNA IZQUIERDA) DESPLIEGA A LA DERECHA */
+    .input-grid > div:first-child .tooltip-text {
+      left: 0;
+      right: auto;
     }
 
     input, select { width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
