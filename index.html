@@ -146,13 +146,17 @@
       text-overflow: ellipsis; 
     }
 
-    .form-group { margin-bottom: 16px; }
+    /* FORM GROUP CON ANCLAJE RELATIVO */
+    .form-group { 
+      margin-bottom: 16px; 
+      position: relative;
+    }
 
-    /* ESTRUCTURA TOOLTIP CORREGIDA */
+    /* ESTRUCTURA TOOLTIP CORREGIDA DEFINITIVA */
     .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     
-    .tooltip-container { display: inline-flex; align-items: center; position: relative; }
+    .tooltip-container { display: inline-flex; align-items: center; }
     .tooltip-icon {
       display: inline-flex;
       align-items: center;
@@ -170,11 +174,10 @@
     }
     .tooltip-icon:hover { background-color: var(--accent); color: #000; }
     
-    /* TOOLTIP POR DEFECTO: ANCLADO A LA DERECHA */
+    /* TOOLTIP AMARRADO AL ANCHO COMPLETO DEL CONTENEDOR */
     .tooltip-text {
       visibility: hidden;
-      width: 240px;
-      max-width: calc(100vw - 64px);
+      width: 100%;
       background-color: #0f172a;
       color: var(--text);
       font-size: 0.75rem;
@@ -184,23 +187,23 @@
       padding: 10px 12px;
       position: absolute;
       z-index: 50;
-      bottom: 125%;
+      top: 26px;
+      left: 0;
       right: 0;
-      left: auto;
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
       line-height: 1.4;
       white-space: normal;
+      pointer-events: none;
     }
     .tooltip-text ul { padding-left: 14px; margin-top: 4px; }
     .tooltip-text li { margin-bottom: 3px; }
-    .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
-
-    /* SOLO KM/GAL (COLUMNA IZQUIERDA) DESPLIEGA A LA DERECHA */
-    .input-grid > div:first-child .tooltip-text {
-      left: 0;
-      right: auto;
+    
+    .tooltip-container:hover .tooltip-text,
+    .label-with-tooltip:hover .tooltip-text { 
+      visibility: visible; 
+      opacity: 1; 
     }
 
     input, select { width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
