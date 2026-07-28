@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- FAVICON "EE" ESCALONADO (Blanco / Verde Neón) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><g transform='skewX(-14)' font-family='Arial Black, sans-serif' font-weight='900' font-size='62'><text x='24' y='64' fill='%23ffffff'>E</text><text x='58' y='76' fill='%2322c55e'>E</text></g></svg>">
+  
+  <title>CheetaYield™</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    
+    .container { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); position: relative; }
+    .header { text-align: center; margin-bottom: 20px; }
+    
+    /* BOTÓN HOME (ÍCONO CASA) */
+    .home-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background-color: #0f172a;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .home-link:hover {
+      color: #ffffff;
+      border-color: var(--accent);
+      background-color: rgba(34, 197, 94, 0.1);
+    }
+    .home-link svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* TÍTULO ESCALONADO E ITÁLICO */
+    .header h1 { 
+      font-size: 2.1rem; 
+      font-weight: 900; 
+      font-style: italic;
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 2px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .header h1 span.brand-cheeta { 
+      color: #ffffff; 
+      transform: translateY(-1.5px);
+      display: inline-block;
+    }
+
+    .header h1 span.brand-yield { 
+      color: var(--accent); 
+      transform: translateY(1.5px);
+      display: inline-block;
+    }
+
+    .header h1 .brand-tm {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.6;
+      margin-left: 2px;
+      align-self: flex-start;
+      transform: translateY(-2px);
+    }
+    
+    .header p { 
+      font-size: clamp(0.7rem, 3.4vw, 0.9rem); 
+      color: var(--text-muted); 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+
+    .form-group { margin-bottom: 16px; }
+
+    /* ESTRUCTURA TOOLTIP EXACTA */
+    .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+    .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
+    
+    .tooltip-container { display: inline-flex; align-items: center; position: relative; }
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background-color: var(--border);
+      color: var(--text-muted);
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .tooltip-icon:hover { background-color: var(--accent); color: #000; }
+    
+    .tooltip-text {
+      visibility: hidden;
+      width: 240px;
+      background-color: #0f172a;
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: normal;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      line-height: 1.4;
+    }
+    .tooltip-text ul { padding-left: 14px; margin-top: 4px; }
+    .tooltip-text li { margin-bottom: 3px; }
+    .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+    /* Ajustes específicos de posición para columnas de la cuadrícula */
+    .input-grid .tooltip-container:first-child .tooltip-text { left: 0; transform: translateX(0); }
+    .input-grid div:last-child .tooltip-text { left: auto; right: 0; transform: translateX(0); }
+
+    input, select { width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
+    input:focus, select:focus { border-color: var(--accent); }
+    input::placeholder { color: #475569; }
+
+    /* SELECTOR DE ESCALONES (PILLS) */
+    .blend-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .blend-btn {
+      background-color: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 0;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .blend-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .blend-btn.active {
+      background-color: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* BOTONES DE ACCIÓN (CALCULAR Y REINICIAR) */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .submit-btn { 
+      flex: 1;
+      padding: 14px; 
+      background-color: var(--accent); 
+      color: #000; 
+      border: none; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      font-size: 0.95rem; 
+      cursor: pointer; 
+      transition: background-color 0.2s; 
+    }
+    .submit-btn:hover { background-color: var(--accent-hover); }
+
+    .reset-btn {
+      padding: 14px 16px;
+      background-color: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .reset-btn:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.05);
+    }
+
+    /* TARJETA DE RESULTADOS */
+    .result-box {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      background-color: #0f172a;
+      border: 1px solid var(--border);
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .result-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .result-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .result-val.highlight {
+      color: var(--accent);
+    }
+
+    /* ELEMENTOS OCULTOS INICIALMENTE */
+    .hidden {
+      display: none !important;
+    }
+
+    /* NOTA TÉCNICA */
+    .tech-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 3px solid #3b82f6;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin-top: 16px;
+      line-height: 1.4;
+      text-align: justify;
+    }
+
+    .tech-note b {
+      color: #93c5fd;
+    }
+
+    .disclaimer { 
+      font-size: 0.7rem; 
+      color: #64748b; 
+      line-height: 1.4; 
+      text-align: justify; 
+      margin-top: 16px; 
+      padding-top: 12px; 
+      border-top: 1px dashed var(--border); 
+    }
+
+    .footer { text-align: center; margin-top: 24px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 16px; }
+
+    .footer-links { display: flex; justify-content: center; gap: 14px; margin-top: 4px; flex-wrap: wrap; }
+    .footer-link {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-decoration: underline;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: #fff; }
+    
+    .version-tag { font-size: 0.65rem; color: #475569; font-weight: 600; letter-spacing: 0.5px; margin-top: 12px; }
+
+    /* MODAL PRIVACIDAD / FAQ */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 440px;
+      width: 100%;
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .modal-header h3 { font-size: 1rem; color: var(--accent); }
+    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; font-weight: bold; }
+    .close-btn:hover { color: #fff; }
+    .modal-body { font-size: 0.8rem; line-height: 1.5; color: #cbd5e1; }
+    .modal-body h4 { font-size: 0.85rem; color: #fff; margin-top: 10px; margin-bottom: 4px; }
+    .modal-body p { margin-bottom: 8px; text-align: justify; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- ÍCONO DE CASA PARA NAVEGAR A CHEETAFLEX.COM -->
+    <a href="https://cheetaflex.com" class="home-link" title="Volver a CheetaFlex.com">
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+
+    <div class="header">
+      <h1>
+        <span class="brand-cheeta">CHEETA</span><span class="brand-yield">YIELD</span><sup class="brand-tm">TM</sup>
+      </h1>
+      <p>Simulador de Autonomía y Rendimiento Real</p>
+    </div>
+
+    <!-- SELECTOR DE MEZCLA -->
+    <div class="form-group">
+      <div class="label-with-tooltip">
+        <label>1. Selecciona la Mezcla:</label>
+        <div class="tooltip-container">
+          <span class="tooltip-icon">?</span>
+          <div class="tooltip-text">
+            Porcentaje de bioetanol mezclado con la gasolina:
+            <ul>
+              <li><b>E10/E20:</b> Proporciones estándar de bajo impacto.</li>
+              <li><b>E85/E100:</b> Altas mezclas para vehículos FlexFuel o reprogramados.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="blend-selector">
+        <button class="blend-btn active" id="btn-e10" onclick="setBlend(10, this)">E10</button>
+        <button class="blend-btn" onclick="setBlend(20, this)">E20</button>
+        <button class="blend-btn" onclick="setBlend(85, this)">E85</button>
+        <button class="blend-btn" onclick="setBlend(100, this)">E100</button>
+      </div>
+    </div>
+
+    <!-- DATOS NUMÉRICOS DEL VEHÍCULO -->
+    <div class="form-group">
+      <div class="input-grid">
+        <div>
+          <div class="label-with-tooltip">
+            <label for="kmGal">2. Km/Gal:</label>
+            <div class="tooltip-container">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-text">
+                Rendimiento promedio habitual con gasolina convencional. Puedes revisarlo en la computadora a bordo de tu auto o en la ficha técnica.
+              </div>
+            </div>
+          </div>
+          <input type="number" id="kmGal" placeholder="Ej. 40" min="1">
+        </div>
+
+        <div>
+          <div class="label-with-tooltip">
+            <label for="tankSize">3. Tanque (Gal):</label>
+            <div class="tooltip-container">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-text">
+                Capacidad total del tanque de combustible expresada en galones americanos (revisa el manual del propietario).
+              </div>
+            </div>
+          </div>
+          <input type="number" id="tankSize" placeholder="Ej. 10" min="1">
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTONES DE ACCIÓN -->
+    <div class="action-buttons">
+      <button class="submit-btn" onclick="evaluarRendimiento()">CALCULAR RENDIMIENTO</button>
+      <button class="reset-btn hidden" id="resetBtn" onclick="resetForm()" title="Reiniciar formulario">↺ Reset</button>
+    </div>
+
+    <!-- RESULTADOS (OCULTOS INICIALMENTE) -->
+    <div class="result-box hidden" id="resultBox">
+      <div class="result-row">
+        <span class="result-label">Rendimiento Estimado:</span>
+        <span class="result-val" id="resKmGal">-- km/gal</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Ajuste por Densidad:</span>
+        <span class="result-val highlight" id="resLoss">-1.5%</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Diferencia por Tanque:</span>
+        <span class="result-val" id="resTankDiff">-- km</span>
+      </div>
+    </div>
+
+    <!-- NOTA TÉCNICA DINÁMICA (OCULTA INICIALMENTE) -->
+    <div class="tech-note hidden" id="techNote">
+      <!-- Se genera al calcular -->
+    </div>
+
+    <!-- AVISO LEGAL (OCULTO INICIALMENTE) -->
+    <p class="disclaimer hidden" id="disclaimer">
+      ⚠️ <b>Aviso Legal:</b> CheetaYield™ ofrece estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
+    </p>
+
+    <!-- FOOTER HOMOGÉNEO -->
+    <div class="footer">
+      <div class="footer-links">
+        <span class="footer-link" onclick="openModal('faq')">Preguntas Frecuentes</span>
+        <span class="footer-link" onclick="openModal('privacy')">Privacidad</span>
+        <span class="footer-link" onclick="reportarError()">Reporta un Problema</span>
+      </div>
+
+      <div class="version-tag">v.0.0.1</div>
+    </div>
+  </div>
+
+  <!-- MODAL FAQS Y PRIVACIDAD -->
+  <div id="info-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Título</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Dinámico -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedEthanol = 10;
+
+    const yieldLossFactors = {
+      10: 1.5,
+      20: 3.0,
+      85: 22.0,
+      100: 27.0
+    };
+
+    const techNotes = {
+      10: "Con E10, la variación de autonomía es de solo ~1.5%. Hábitos cotidianos como acelerar bruscamente o llevar llantas bajas impactan hasta un 10%, opacando por completo el efecto del combustible.",
+      20: "Con E20, la variación proyectada es de ~3.0%. Es una proporción estándar en varios mercados globales que ofrece una transición fluida y un excelente balance estequiométrico en motores modernos.",
+      85: "E85 ajusta la autonomía cerca de un 22%. Sin embargo, su elevado octanaje (~105 octanos) permite mayor compresión y avance de tiempo en motores optimizados.",
+      100: "Con E100 (Etanol Anhidro/Hidratado puro), la reducción teórica de autonomía ronda el 27%. Requiere calibración dedicada y sistemas FlexFuel capaces de gestionar la mayor demanda de caudal por inyección."
+    };
+
+    function setBlend(percentage, element) {
+      selectedEthanol = percentage;
+      document.querySelectorAll('.blend-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      
+      if (!document.getElementById('resultBox').classList.contains('hidden')) {
+        evaluarRendimiento();
+      }
+    }
+
+    function evaluarRendimiento() {
+      const kmGalInput = parseFloat(document.getElementById('kmGal').value);
+      const tankInput = parseFloat(document.getElementById('tankSize').value);
+
+      if (!kmGalInput || !tankInput || kmGalInput <= 0 || tankInput <= 0) {
+        alert("Por favor ingresa un kilometraje por galón y tamaño de tanque válidos.");
+        return;
+      }
+
+      const lossPercentage = yieldLossFactors[selectedEthanol] || 1.5;
+      const newKmGal = kmGalInput * (1 - (lossPercentage / 100));
+      
+      const originalTankRange = kmGalInput * tankInput;
+      const newTankRange = newKmGal * tankInput;
+      const tankDiff = newTankRange - originalTankRange;
+
+      document.getElementById('resKmGal').innerText = `${newKmGal.toFixed(1)} km/gal`;
+      document.getElementById('resLoss').innerText = `-${lossPercentage.toFixed(1)}%`;
+      document.getElementById('resTankDiff').innerText = `${tankDiff.toFixed(1)} km`;
+      
+      const techNoteEl = document.getElementById('techNote');
+      techNoteEl.innerHTML = `💡 <b>Diagnóstico de Rendimiento (E${selectedEthanol}):</b> ${techNotes[selectedEthanol]}`;
+
+      document.getElementById('resultBox').classList.remove('hidden');
+      techNoteEl.classList.remove('hidden');
+      document.getElementById('disclaimer').classList.remove('hidden');
+      document.getElementById('resetBtn').classList.remove('hidden');
+    }
+
+    function resetForm() {
+      document.getElementById('kmGal').value = '';
+      document.getElementById('tankSize').value = '';
+
+      selectedEthanol = 10;
+      document.querySelectorAll('.blend-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('btn-e10').classList.add('active');
+
+      document.getElementById('resultBox').classList.add('hidden');
+      document.getElementById('techNote').classList.add('hidden');
+      document.getElementById('disclaimer').classList.add('hidden');
+      document.getElementById('resetBtn').classList.add('hidden');
+    }
+
+    function reportarError() {
+      const formUrl = "https://forms.gle/SChB6HrnJxaYc9dUA";
+      window.open(formUrl, '_blank');
+    }
+
+    function openModal(type) {
+      const modal = document.getElementById('info-modal');
+      const title = document.getElementById('modal-title');
+      body = document.getElementById('modal-body');
+
+      if (type === 'faq') {
+        title.innerText = "Preguntas Frecuentes";
+        body.innerHTML = `
+          <h4>1. ¿Por qué varía el rendimiento con etanol?</h4>
+          <p>El etanol contiene menor densidad energética volumétrica que la gasolina. Sin embargo, su mayor octanaje y oxigenación mejoran la eficiencia de combustión interna.</p>
+
+          <h4>2. ¿E10 o E20 harán que mi auto consuma sustancialmente más?</h4>
+          <p>No. En mezclas bajas (E10 a E20) la variación matemática oscila entre 1.5% y 3.0%, lo cual es prácticamente imperceptible en el manejo cotidiano.</p>
+          
+          <h4>3. ¿Cómo se calculan las diferencias por tanque?</h4>
+          <p>Multiplicamos el rendimiento teórico ajustado por la capacidad total de galones declarada, mostrando la diferencia neta de kilómetros recorridos por tanque lleno.</p>
+        `;
+      } else if (type === 'privacy') {
+        title.innerText = "Política de Privacidad";
+        body.innerHTML = `
+          <p>En <b>Cheeta™</b> priorizamos tu privacidad al 100%:</p>
+          <ul>
+            <li><b>Sin almacenamiento:</b> No guardamos los datos de rendimiento o capacidad de tanque ingresados.</li>
+            <li><b>Procesamiento Local:</b> Las fórmulas matemáticas se ejecutan de forma inmediata dentro de tu navegador.</li>
+            <li><b>Cero Rastreo:</b> Sin cookies ni recolección de información personal.</li>
+          </ul>
+        `;
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('info-modal').style.display = 'none';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'info-modal') closeModal();
+    }
+  </script>
+</body>
+</html>
