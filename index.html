@@ -20,7 +20,18 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+    
+    /* OVERFLOW-X HIDDEN EVITA CUALQUIER DESPLAZAMIENTO HORIZONTAL EN MÓVIL */
+    body { 
+      background-color: var(--bg-color); 
+      color: var(--text); 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      padding: 16px; 
+      overflow-x: hidden;
+    }
     
     .container { 
       background-color: var(--card-bg); 
@@ -134,7 +145,7 @@
 
     .form-group { margin-bottom: 16px; }
 
-    /* ESTRUCTURA TOOLTIP CORREGIDA */
+    /* ESTRUCTURA TOOLTIP */
     .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     
@@ -156,11 +167,11 @@
     }
     .tooltip-icon:hover { background-color: var(--accent); color: #000; }
     
-    /* TOOLTIP ABRE HACIA LA DERECHA CON ANCHO FLUIDO */
+    /* TOOLTIP BASE CON ANCHO AJUSTADO Y SEGURO */
     .tooltip-text {
       visibility: hidden;
       width: max-content;
-      max-width: clamp(200px, 60vw, 260px);
+      max-width: clamp(200px, 65vw, 240px);
       background-color: #0f172a;
       color: var(--text);
       font-size: 0.75rem;
@@ -184,7 +195,8 @@
     .tooltip-text li { margin-bottom: 3px; }
     .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-    /* SOLO LA COLUMNA DERECHA ("TANQUE") ABRE HACIA LA IZQUIERDA */
+    /* EL PRIMER TOOLTIP Y EL DE LA COLUMNA DERECHA ABREN HACIA LA IZQUIERDA */
+    .form-group:first-of-type .tooltip-text,
     .input-grid > div:last-child .tooltip-text {
       left: auto;
       right: 0;
@@ -490,7 +502,7 @@
 
     <!-- AVISO LEGAL (OCULTO INICIALMENTE) -->
     <p class="disclaimer hidden" id="disclaimer">
-      ⚠️ <b>Aviso Legal:</b> CheetaYield™ offers estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
+      ⚠️ <b>Aviso Legal:</b> CheetaYield™ ofrece estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
     </p>
 
     <!-- FOOTER HOMOGÉNEO -->
