@@ -134,7 +134,7 @@
 
     .form-group { margin-bottom: 16px; }
 
-    /* ESTRUCTURA TOOLTIP */
+    /* ESTRUCTURA TOOLTIP CORREGIDA */
     .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     
@@ -156,32 +156,39 @@
     }
     .tooltip-icon:hover { background-color: var(--accent); color: #000; }
     
-    /* TOOLTIP ABRE HACIA LA DERECHA POR DEFECTO */
+    /* TOOLTIP ABRE HACIA LA DERECHA CON ANCHO FLUIDO */
     .tooltip-text {
       visibility: hidden;
-      width: 220px;
+      width: max-content;
+      max-width: clamp(200px, 60vw, 260px);
       background-color: #0f172a;
       color: var(--text);
       font-size: 0.75rem;
       font-weight: normal;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 10px;
+      padding: 10px 12px;
       position: absolute;
-      z-index: 20;
+      z-index: 50;
       bottom: 125%;
       left: 0;
+      right: auto;
+      transform: none;
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
       line-height: 1.4;
+      white-space: normal;
     }
     .tooltip-text ul { padding-left: 14px; margin-top: 4px; }
     .tooltip-text li { margin-bottom: 3px; }
     .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-    /* EL ÚLTIMO ELEMENTO DE LA DERECHA ABRE HACIA LA IZQUIERDA */
-    .input-grid div:last-child .tooltip-text { left: auto; right: 0; }
+    /* SOLO LA COLUMNA DERECHA ("TANQUE") ABRE HACIA LA IZQUIERDA */
+    .input-grid > div:last-child .tooltip-text {
+      left: auto;
+      right: 0;
+    }
 
     input, select { width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
     input:focus, select:focus { border-color: var(--accent); }
@@ -483,7 +490,7 @@
 
     <!-- AVISO LEGAL (OCULTO INICIALMENTE) -->
     <p class="disclaimer hidden" id="disclaimer">
-      ⚠️ <b>Aviso Legal:</b> CheetaYield™ ofrece estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
+      ⚠️ <b>Aviso Legal:</b> CheetaYield™ offers estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
     </p>
 
     <!-- FOOTER HOMOGÉNEO -->
