@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <!-- FAVICON "EE" ESCALONADO (Blanco / Verde Neón) -->
+  <!-- FAVICON "EE" ESCALONADO -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><g transform='skewX(-14)' font-family='Arial Black, sans-serif' font-weight='900' font-size='62'><text x='24' y='64' fill='%23ffffff'>E</text><text x='58' y='76' fill='%2322c55e'>E</text></g></svg>">
   
   <title>CheetaYield™</title>
@@ -152,7 +152,7 @@
       position: relative;
     }
 
-    /* ESTRUCTURA TOOLTIP CORREGIDA DEFINITIVA */
+    /* ESTRUCTURA TOOLTIP DUAL (HOVER PC + TAP MÓVIL) */
     .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     
@@ -171,12 +171,29 @@
       cursor: pointer;
       transition: all 0.2s ease;
       flex-shrink: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .tooltip-icon:hover { background-color: var(--accent); color: #000; }
+
+    /* ESTILOS DE VISIBILIDAD (SOPORTA :hover Y CLASE .show EN MÓVIL) */
+    @media (hover: hover) {
+      .tooltip-container:hover .tooltip-icon {
+        background-color: var(--accent);
+        color: #000;
+      }
+      .tooltip-container:hover .tooltip-text {
+        display: block;
+      }
+    }
+
+    .tooltip-icon.active { 
+      background-color: var(--accent); 
+      color: #000; 
+    }
     
-    /* TOOLTIP AMARRADO AL ANCHO COMPLETO DEL CONTENEDOR */
+    /* CAJA DEL TOOLTIP */
     .tooltip-text {
-      visibility: hidden;
+      display: none;
       width: 100%;
       background-color: #0f172a;
       color: var(--text);
@@ -186,24 +203,37 @@
       border-radius: 8px;
       padding: 10px 12px;
       position: absolute;
-      z-index: 50;
+      z-index: 60;
       top: 26px;
       left: 0;
       right: 0;
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
       box-shadow: 0 8px 20px rgba(0,0,0,0.7);
       line-height: 1.4;
       white-space: normal;
-      pointer-events: none;
     }
+
+    /* CLASE ACTIVADA POR JS EN PANTALLAS TÁCTILES */
+    .tooltip-text.show {
+      display: block !important;
+    }
+
     .tooltip-text ul { padding-left: 14px; margin-top: 4px; }
     .tooltip-text li { margin-bottom: 3px; }
-    
-    .tooltip-container:hover .tooltip-text,
-    .label-with-tooltip:hover .tooltip-text { 
-      visibility: visible; 
-      opacity: 1; 
+
+    /* CAPA DE PROTECCIÓN INVISIBLE SOLO PARA TAPS EN MÓVIL */
+    .tooltip-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      z-index: 55;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tooltip-backdrop.active {
+      display: block;
     }
 
     input, select { width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
@@ -408,6 +438,9 @@
 </head>
 <body>
 
+  <!-- CAPA DE PROTECCIÓN SOLO PARA PANTALLAS TÁCTILES -->
+  <div id="tooltip-backdrop" class="tooltip-backdrop" onclick="closeAllTooltips()"></div>
+
   <div class="container">
     <!-- ÍCONO DE CASA -->
     <a href="https://cheetaflex.com" class="home-link" title="Volver a CheetaFlex.com">
@@ -428,8 +461,8 @@
       <div class="label-with-tooltip">
         <label>1. Selecciona la Mezcla:</label>
         <div class="tooltip-container">
-          <span class="tooltip-icon">?</span>
-          <div class="tooltip-text">
+          <span class="tooltip-icon" onclick="handleTooltipTap(event, 'tt-blend')">?</span>
+          <div class="tooltip-text" id="tt-blend">
             Porcentaje de bioetanol mezclado con la gasolina:
             <ul>
               <li><b>E10/E20:</b> Proporciones estándar de bajo impacto.</li>
@@ -453,8 +486,8 @@
           <div class="label-with-tooltip">
             <label for="kmGal">2. Km/Gal:</label>
             <div class="tooltip-container">
-              <span class="tooltip-icon">?</span>
-              <div class="tooltip-text">
+              <span class="tooltip-icon" onclick="handleTooltipTap(event, 'tt-kmgal')">?</span>
+              <div class="tooltip-text" id="tt-kmgal">
                 Rendimiento promedio habitual con gasolina convencional. Puedes revisarlo en la computadora a bordo de tu auto o en la ficha técnica.
               </div>
             </div>
@@ -466,8 +499,8 @@
           <div class="label-with-tooltip">
             <label for="tankSize">3. Tanque (Gal):</label>
             <div class="tooltip-container">
-              <span class="tooltip-icon">?</span>
-              <div class="tooltip-text">
+              <span class="tooltip-icon" onclick="handleTooltipTap(event, 'tt-tank')">?</span>
+              <div class="tooltip-text" id="tt-tank">
                 Capacidad total del tanque de combustible expresada en galones americanos (revisa el manual del propietario).
               </div>
             </div>
@@ -483,7 +516,7 @@
       <button class="reset-btn hidden" id="resetBtn" onclick="resetForm()" title="Reiniciar formulario">↺ Reset</button>
     </div>
 
-    <!-- RESULTADOS (OCULTOS INICIALMENTE) -->
+    <!-- RESULTADOS -->
     <div class="result-box hidden" id="resultBox">
       <div class="result-row">
         <span class="result-label">Rendimiento Estimado:</span>
@@ -499,12 +532,12 @@
       </div>
     </div>
 
-    <!-- NOTA TÉCNICA DINÁMICA (OCULTA INICIALMENTE) -->
+    <!-- NOTA TÉCNICA DINÁMICA -->
     <div class="tech-note hidden" id="techNote">
       <!-- Se genera al calcular -->
     </div>
 
-    <!-- AVISO LEGAL (OCULTO INICIALMENTE) -->
+    <!-- AVISO LEGAL -->
     <p class="disclaimer hidden" id="disclaimer">
       ⚠️ <b>Aviso Legal:</b> CheetaYield™ ofrece estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
     </p>
@@ -550,6 +583,34 @@
       85: "E85 ajusta la autonomía cerca de un 22%. Sin embargo, su elevado octanaje (~105 octanos) permite mayor compresión y avance de tiempo en motores optimizados.",
       100: "Con E100 (Etanol Anhidro/Hidratado puro), la reducción teórica de autonomía ronda el 27%. Requiere calibración dedicada y sistemas FlexFuel capaces de gestionar la mayor demanda de caudal por inyección."
     };
+
+    /* MANEJO DUAL: MANTENER HOVER EN PC Y CAPA PROTECTORA SOLO SI HAY UN TAP REAL EN PANTALLA TÁCTIL */
+    function handleTooltipTap(event, tooltipId) {
+      // Si el evento fue generado por un cursor de mouse convencional (hover ya funciona), no activamos el seguro
+      if (window.matchMedia('(hover: hover)').matches && event.pointerType === 'mouse') {
+        return;
+      }
+
+      event.stopPropagation();
+      const targetTooltip = document.getElementById(tooltipId);
+      const isOpen = targetTooltip.classList.contains('show');
+
+      closeAllTooltips();
+
+      if (!isOpen) {
+        targetTooltip.classList.add('show');
+        document.getElementById('tooltip-backdrop').classList.add('active');
+        if (event.currentTarget) {
+          event.currentTarget.classList.add('active');
+        }
+      }
+    }
+
+    function closeAllTooltips() {
+      document.querySelectorAll('.tooltip-text').forEach(tt => tt.classList.remove('show'));
+      document.querySelectorAll('.tooltip-icon').forEach(icon => icon.classList.remove('active'));
+      document.getElementById('tooltip-backdrop').classList.remove('active');
+    }
 
     function setBlend(percentage, element) {
       selectedEthanol = percentage;
