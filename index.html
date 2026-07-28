@@ -73,7 +73,7 @@
       fill: currentColor;
     }
 
-    /* RESPONSIVE: AL REDUCIR ESPACIO, LA CASITA SE QUEDA A LA IZQUIERDA Y EMPUJA EL TEXTO */
+    /* RESPONSIVE AUTO-STACKING: BOTÓN A LA IZQUIERDA */
     @media (max-width: 420px) {
       .container {
         padding: 18px 16px;
@@ -82,7 +82,7 @@
         position: relative;
         top: 0;
         left: 0;
-        margin-bottom: 12px; /* Alineado a la izquierda en su propio renglón */
+        margin-bottom: 12px;
       }
       .header {
         padding-top: 0;
@@ -134,7 +134,7 @@
 
     .form-group { margin-bottom: 16px; }
 
-    /* ESTRUCTURA TOOLTIP EXACTA */
+    /* ESTRUCTURA TOOLTIP */
     .label-with-tooltip { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .label-with-tooltip label { margin-bottom: 0; line-height: 1; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     
@@ -156,9 +156,10 @@
     }
     .tooltip-icon:hover { background-color: var(--accent); color: #000; }
     
+    /* TOOLTIP ABRE HACIA LA DERECHA POR DEFECTO */
     .tooltip-text {
       visibility: hidden;
-      width: 240px;
+      width: 220px;
       background-color: #0f172a;
       color: var(--text);
       font-size: 0.75rem;
@@ -167,10 +168,9 @@
       border-radius: 8px;
       padding: 10px;
       position: absolute;
-      z-index: 10;
+      z-index: 20;
       bottom: 125%;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
@@ -180,8 +180,8 @@
     .tooltip-text li { margin-bottom: 3px; }
     .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-    .input-grid .tooltip-container:first-child .tooltip-text { left: 0; transform: translateX(0); }
-    .input-grid div:last-child .tooltip-text { left: auto; right: 0; transform: translateX(0); }
+    /* EL ÚLTIMO ELEMENTO DE LA DERECHA ABRE HACIA LA IZQUIERDA */
+    .input-grid div:last-child .tooltip-text { left: auto; right: 0; }
 
     input, select { width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
     input:focus, select:focus { border-color: var(--accent); }
