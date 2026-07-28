@@ -33,14 +33,14 @@
       position: relative; 
     }
     
-    /* HEADER CON BARRERA DE SEGURIDAD */
+    /* HEADER */
     .header { 
       text-align: center; 
       margin-bottom: 20px; 
-      padding-top: 18px; /* Garantiza espacio libre arriba */
+      padding-top: 18px;
     }
     
-    /* BOTÓN HOME CON LAYOUT INTELIGENTE */
+    /* BOTÓN HOME */
     .home-link {
       position: absolute;
       top: 18px;
@@ -73,7 +73,7 @@
       fill: currentColor;
     }
 
-    /* RESPONSIVE AUTO-STACKING: SI SE APRETA LA PANTALLA, LA CASITA SUBE Y EMPUJA EL TEXTO */
+    /* RESPONSIVE: AL REDUCIR ESPACIO, LA CASITA SE QUEDA A LA IZQUIERDA Y EMPUJA EL TEXTO */
     @media (max-width: 420px) {
       .container {
         padding: 18px 16px;
@@ -82,7 +82,7 @@
         position: relative;
         top: 0;
         left: 0;
-        margin: 0 auto 12px auto; /* La coloca centrada arriba y empuja el título abajo */
+        margin-bottom: 12px; /* Alineado a la izquierda en su propio renglón */
       }
       .header {
         padding-top: 0;
@@ -91,7 +91,7 @@
 
     /* TÍTULO ESCALONADO E ITÁLICO */
     .header h1 { 
-      font-size: clamp(1.6rem, 7vw, 2.1rem); /* Tamaño fluido que escala dinámicamente */
+      font-size: clamp(1.6rem, 7vw, 2.1rem); 
       font-weight: 900; 
       font-style: italic;
       display: inline-flex; 
@@ -386,7 +386,7 @@
 <body>
 
   <div class="container">
-    <!-- ÍCONO DE CASA CON ADAPTACIÓN AUTOMÁTICA -->
+    <!-- ÍCONO DE CASA -->
     <a href="https://cheetaflex.com" class="home-link" title="Volver a CheetaFlex.com">
       <svg viewBox="0 0 24 24">
         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
@@ -483,7 +483,7 @@
 
     <!-- AVISO LEGAL (OCULTO INICIALMENTE) -->
     <p class="disclaimer hidden" id="disclaimer">
-      ⚠️ <b>Aviso Legal:</b> CheetaYield™ offers estimates based on energy density differences. Driving variations may affect final mileage.
+      ⚠️ <b>Aviso Legal:</b> CheetaYield™ ofrece estimaciones basadas en diferencias de densidad energética volumétrica estándar del etanol frente a la gasolina pura. Las variaciones de manejo, presión de neumáticos y estado del motor pueden alterar el kilometraje final.
     </p>
 
     <!-- FOOTER HOMOGÉNEO -->
